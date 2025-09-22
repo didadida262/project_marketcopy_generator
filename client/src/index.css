@@ -78,6 +78,27 @@
   box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
 }
 
+/* 文案卡片发光效果 */
+.copywriting-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.copywriting-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.copywriting-card:hover::before {
+  left: 100%;
+}
+
 .floating-animation {
   animation: float 6s ease-in-out infinite;
 }

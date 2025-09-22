@@ -523,18 +523,18 @@ const App: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200"
+            className="mb-8 p-6 bg-gradient-to-r from-green-900/20 to-emerald-900/20 rounded-xl border border-green-500/30 backdrop-blur-sm"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
-                <Palette className="w-5 h-5 text-blue-600" />
-                <span className="font-medium text-gray-700">风格:</span>
-                <span className="text-blue-600 font-semibold">{styles[latestCopywriting.style]?.name}</span>
+                <Palette className="w-5 h-5 text-green-400" />
+                <span className="font-medium text-gray-300">风格:</span>
+                <span className="text-green-400 font-semibold">{styles[latestCopywriting.style]?.name}</span>
               </div>
               <div className="flex items-center gap-3">
-                <Globe className="w-5 h-5 text-green-600" />
-                <span className="font-medium text-gray-700">平台:</span>
-                <span className="text-green-600 font-semibold">{platforms[latestCopywriting.platform]?.name}</span>
+                <Globe className="w-5 h-5 text-emerald-400" />
+                <span className="font-medium text-gray-300">平台:</span>
+                <span className="text-emerald-400 font-semibold">{platforms[latestCopywriting.platform]?.name}</span>
               </div>
             </div>
           </motion.div>
@@ -546,25 +546,25 @@ const App: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.1 }}
-                className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white hover:shadow-lg transition-shadow duration-300"
+                className="group relative overflow-hidden rounded-xl border border-gray-700 bg-gray-900/50 backdrop-blur-sm hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/50 transition-all duration-300 copywriting-card"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-blue-500" />
+                    <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                      <Zap className="w-5 h-5 text-green-400" />
                       {variant.angle}
                     </h4>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
+                    <span className="px-3 py-1 bg-green-900/30 text-green-400 border border-green-500/30 rounded-full text-sm font-medium">
                       {variant.wordCount}字
                     </span>
                   </div>
-                  <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+                  <p className="text-gray-300 leading-relaxed mb-6 text-lg">
                     {variant.content}
                   </p>
                   
                   <div className="flex items-center gap-4">
-                    <span className="text-sm font-medium text-gray-600">评分:</span>
+                    <span className="text-sm font-medium text-gray-400">评分:</span>
                     <div className="flex gap-2">
                       {[1,2,3,4,5].map(star => (
                         <motion.button
@@ -572,8 +572,8 @@ const App: React.FC = () => {
                           whileTap={{ scale: 0.9 }}
                           className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
                             latestCopywriting.rating && star <= latestCopywriting.rating
-                              ? 'bg-yellow-400 text-white'
-                              : 'bg-gray-200 text-gray-400 hover:bg-yellow-200'
+                              ? 'bg-yellow-400 text-black'
+                              : 'bg-gray-700 text-gray-400 hover:bg-yellow-400/20 hover:text-yellow-400'
                           }`}
                           onClick={() => handleRating(latestCopywriting.id, star)}
                         >
