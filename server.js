@@ -9,10 +9,22 @@ const { AICopywritingGenerator } = require('./ai-model-integration');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 初始化AI生成器（如果没有API密钥则使用模拟模式）
-const aiGenerator = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key_here' 
-  ? new AICopywritingGenerator(process.env.OPENAI_API_KEY)
-  : null;
+// 初始化AI生成器（支持模拟模式）
+let aiGenerator = null;
+let useMockMode = false;
+
+if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key_here') {
+  try {
+    aiGenerator = new AICopywritingGenerator(process.env.OPENAI_API_KEY);
+    console.log('✅ AI生成器初始化成功 - 使用OpenAI API');
+  } catch (error) {
+    console.log('⚠️  AI生成器初始化失败，切换到模拟模式:', error.message);
+    useMockMode = true;
+  }
+} else {
+  console.log('⚠️  OpenAI API密钥未配置，使用模拟模式');
+  useMockMode = true;
+}
 
 // 中间件
 app.use(cors());
@@ -137,22 +149,44 @@ app.post('/api/generate', async (req, res) => {
     // 使用AI大模型生成文案
     let generatedCopywritings;
     
-    if (aiGenerator) {
-      // 使用真实AI模型
-      generatedCopywritings = await aiGenerator.generateCopywriting(
-        product, 
-        style, 
-        platform, 
-        variantCount
-      );
+    if (useMockMode) {
+      // 使用模拟生成
+      console.log('使用模拟模式生成文案');
+      generatedCopywritings = generateMockCopywritings(product, styleConfig, platformConfig, variantCount);
     } else {
-      // 使用模拟生成（开发环境）
-      generatedCopywritings = generateMockCopywritings(
-        product, 
-        styleConfig, 
-        platformConfig, 
-        variantCount
-      );
+      try {
+        // 使用真实AI模型
+        generatedCopywritings = await aiGenerator.generateCopywriting(
+          product, 
+          style, 
+          platform, 
+          variantCount
+        );
+      } catch (aiError) {
+        console.error('AI生成失败，切换到模拟模式:', aiError);
+        
+        // 根据错误类型返回不同的错误信息
+        if (aiError.code === 'insufficient_quota') {
+          return res.status(402).json({ 
+            error: 'OpenAI API配额不足',
+            details: '请检查您的OpenAI账户余额或升级套餐'
+          });
+        } else if (aiError.code === 'invalid_api_key') {
+          return res.status(401).json({ 
+            error: 'OpenAI API密钥无效',
+            details: '请检查您的API密钥是否正确'
+          });
+        } else if (aiError.code === 'rate_limit_exceeded') {
+          return res.status(429).json({ 
+            error: 'API调用频率超限',
+            details: '请稍后再试，或升级您的OpenAI套餐'
+          });
+        } else {
+          // 其他错误，使用模拟模式
+          console.log('切换到模拟模式生成文案');
+          generatedCopywritings = generateMockCopywritings(product, styleConfig, platformConfig, variantCount);
+        }
+      }
     }
     
     // 保存生成的文案
@@ -164,7 +198,7 @@ app.post('/api/generate', async (req, res) => {
       content: generatedCopywritings,
       createdAt: new Date().toISOString(),
       rating: null,
-      aiGenerated: !!aiGenerator
+      aiGenerated: !useMockMode
     };
     
     copywritings.push(copywriting);

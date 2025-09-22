@@ -3,13 +3,11 @@ const { OpenAI } = require('openai');
 
 class AICopywritingGenerator {
   constructor(apiKey) {
-    if (apiKey && apiKey !== 'your_openai_api_key_here') {
-      this.openai = new OpenAI({ apiKey });
-      this.useAI = true;
-    } else {
-      this.openai = null;
-      this.useAI = false;
+    if (!apiKey || apiKey === 'your_openai_api_key_here') {
+      throw new Error('OpenAI API密钥未配置');
     }
+    
+    this.openai = new OpenAI({ apiKey });
     this.industryKnowledge = new IndustryKnowledgeBase();
     this.caseLearning = new CaseLearningSystem();
     this.promptEngineering = new PromptEngineering();
@@ -17,119 +15,34 @@ class AICopywritingGenerator {
 
   // 主生成方法
   async generateCopywriting(product, style, platform, variantCount = 3) {
-    try {
-      if (!this.useAI) {
-        // 如果没有AI，使用增强的模拟生成
-        return this.generateEnhancedMockCopywriting(product, style, platform, variantCount);
-      }
-
-      // 1. 获取行业专业知识
-      const industryContext = this.industryKnowledge.getContext(product.category);
-      
-      // 2. 获取相关优秀案例
-      const similarCases = await this.caseLearning.findSimilarCases(product);
-      
-      // 3. 构建专业提示词
-      const prompt = this.promptEngineering.buildPrompt({
-        product,
-        style,
-        platform,
-        industryContext,
-        similarCases,
-        variantCount
-      });
-
-      // 4. 调用AI模型生成
-      const response = await this.openai.chat.completions.create({
-        model: "gpt-4-turbo-preview",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7,
-        max_tokens: 2000
-      });
-
-      // 5. 解析和优化结果
-      return this.parseAndOptimizeResponse(response.choices[0].message.content, platform);
-      
-    } catch (error) {
-      console.error('AI生成失败:', error);
-      return this.generateEnhancedMockCopywriting(product, style, platform, variantCount);
-    }
-  }
-
-  // 增强的模拟生成方法
-  generateEnhancedMockCopywriting(product, style, platform, variantCount) {
+    // 1. 获取行业专业知识
     const industryContext = this.industryKnowledge.getContext(product.category);
-    const angles = ['功能卖点', '情感共鸣', '使用场景', '对比优势', '品质保证'];
-    const variants = [];
+    
+    // 2. 获取相关优秀案例
+    const similarCases = await this.caseLearning.findSimilarCases(product);
+    
+    // 3. 构建专业提示词
+    const prompt = this.promptEngineering.buildPrompt({
+      product,
+      style,
+      platform,
+      industryContext,
+      similarCases,
+      variantCount
+    });
 
-    for (let i = 0; i < variantCount; i++) {
-      const angle = angles[i % angles.length];
-      let content = '';
+    // 4. 调用AI模型生成
+    const response = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo-preview",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+      max_tokens: 2000
+    });
 
-      // 使用行业专业知识生成更专业的文案
-      const keywords = industryContext.keywords;
-      const sellingPoints = industryContext.sellingPoints;
-      const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
-      const randomSellingPoint = sellingPoints[Math.floor(Math.random() * sellingPoints.length)];
-
-      switch (angle) {
-        case '功能卖点':
-          content = `【${product.name}】${randomKeyword}！${product.description}。${randomSellingPoint}，${product.features.length > 0 ? `主要特点：${product.features.join('、')}。` : ''}${platform === 'ecommerce' ? '立即下单，品质保证！' : '了解更多详情。'}`;
-          break;
-        case '情感共鸣':
-          content = `每一个细节都体现着用心，${product.name}不仅是一件商品，更是对生活的热爱。${product.description}，让${product.targetAudience || '您'}感受到真正的品质生活。${randomSellingPoint}，值得拥有！`;
-          break;
-        case '使用场景':
-          content = `无论是${product.targetAudience || '日常使用'}还是特殊场合，${product.name}都能完美胜任。${product.description}，${randomKeyword}，让每一个瞬间都更加精彩。`;
-          break;
-        case '对比优势':
-          content = `为什么选择${product.name}？${product.description}。相比同类产品，我们更注重${randomSellingPoint}，为您提供更好的体验。${randomKeyword}，值得信赖！`;
-          break;
-        case '品质保证':
-          content = `${product.name}，严格把控每一个环节，确保${product.description}。${randomSellingPoint}，${product.features.length > 0 ? `核心优势：${product.features.join('、')}。` : ''}${randomKeyword}，值得信赖的选择。`;
-          break;
-      }
-
-      // 根据平台调整长度
-      const maxLength = this.getPlatformMaxLength(platform);
-      if (content.length > maxLength) {
-        content = content.substring(0, maxLength - 3) + '...';
-      }
-
-      variants.push({
-        angle,
-        content,
-        wordCount: content.length,
-        keyPoints: [randomKeyword, randomSellingPoint],
-        targetEmotion: this.getTargetEmotion(style)
-      });
-    }
-
-    return variants;
+    // 5. 解析和优化结果
+    return this.parseAndOptimizeResponse(response.choices[0].message.content, platform);
   }
 
-  getPlatformMaxLength(platform) {
-    const lengths = {
-      'ecommerce': 2000,
-      'social': 500,
-      'ads': 100,
-      'email': 1000,
-      'manual': 3000
-    };
-    return lengths[platform] || 2000;
-  }
-
-  getTargetEmotion(style) {
-    const emotions = {
-      'professional': '专业信任',
-      'friendly': '亲切友好',
-      'simple': '简洁明了',
-      'luxury': '奢华尊贵',
-      'humorous': '轻松愉快',
-      'emotional': '温暖共鸣'
-    };
-    return emotions[style] || '专业信任';
-  }
 }
 
 // 1. 行业专业知识库

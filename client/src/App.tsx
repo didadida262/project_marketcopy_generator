@@ -177,7 +177,37 @@ const App: React.FC = () => {
       setCopywritings([...copywritings, response.data]);
       setCurrentStep(3);
     } catch (err: any) {
-      setError(err.response?.data?.error || '生成文案失败');
+      console.error('生成失败:', err);
+      
+      // 处理不同类型的错误
+      let errorMessage = '生成失败，请重试';
+      
+      if (err.response) {
+        const { status, data } = err.response;
+        switch (status) {
+          case 400:
+            errorMessage = data.details || '请求参数错误';
+            break;
+          case 401:
+            errorMessage = data.details || 'API密钥无效';
+            break;
+          case 402:
+            errorMessage = data.details || 'API配额不足';
+            break;
+          case 429:
+            errorMessage = data.details || 'API调用频率超限';
+            break;
+          case 500:
+            errorMessage = data.details || '服务器内部错误';
+            break;
+          default:
+            errorMessage = data.error || `请求失败 (${status})`;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -661,11 +691,23 @@ const App: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-4xl mx-auto px-4 mb-8"
           >
-            <div className="bg-red-900/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg flex items-center gap-2 backdrop-blur-sm">
-              <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs">!</span>
+            <div className="bg-red-900/20 border border-red-500/30 text-red-400 px-6 py-4 rounded-lg backdrop-blur-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-white text-sm font-bold">!</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-red-300 mb-1">生成失败</h4>
+                  <p className="text-red-400 text-sm leading-relaxed">{error}</p>
+                  {error.includes('API密钥') && (
+                    <div className="mt-3 p-3 bg-red-900/30 rounded border border-red-500/20">
+                      <p className="text-red-300 text-xs">
+                        💡 请检查您的环境变量设置，确保 OPENAI_API_KEY 已正确配置
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-              {error}
             </div>
           </motion.div>
         )}
