@@ -14,5 +14,24 @@
   <body>
     <noscript>您需要启用JavaScript才能运行此应用程序。</noscript>
     <div id="root"></div>
+    <script>
+      // 修复 ResizeObserver 错误
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          return false;
+        }
+      });
+      
+      // 修复 console.error 中的 ResizeObserver 错误
+      const originalConsoleError = console.error;
+      console.error = function(...args) {
+        if (args[0] && args[0].toString().includes('ResizeObserver loop completed with undelivered notifications')) {
+          return;
+        }
+        originalConsoleError.apply(console, args);
+      };
+    </script>
   </body>
 </html>
