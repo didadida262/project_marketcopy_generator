@@ -3,8 +3,16 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+// 导入AI生成系统
+const { AICopywritingGenerator } = require('./ai-model-integration');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// 初始化AI生成器（如果没有API密钥则使用模拟模式）
+const aiGenerator = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key_here' 
+  ? new AICopywritingGenerator(process.env.OPENAI_API_KEY)
+  : null;
 
 // 中间件
 app.use(cors());
@@ -109,7 +117,7 @@ app.post('/api/products', (req, res) => {
   res.json(product);
 });
 
-// 生成文案
+// 生成文案 - 使用AI大模型
 app.post('/api/generate', async (req, res) => {
   try {
     const { productId, style, platform, variantCount = 3 } = req.body;
@@ -126,13 +134,26 @@ app.post('/api/generate', async (req, res) => {
       return res.status(400).json({ error: '无效的风格或平台' });
     }
     
-    // 模拟AI生成文案（实际项目中这里会调用OpenAI API）
-    const generatedCopywritings = generateMockCopywritings(
-      product, 
-      styleConfig, 
-      platformConfig, 
-      variantCount
-    );
+    // 使用AI大模型生成文案
+    let generatedCopywritings;
+    
+    if (aiGenerator) {
+      // 使用真实AI模型
+      generatedCopywritings = await aiGenerator.generateCopywriting(
+        product, 
+        style, 
+        platform, 
+        variantCount
+      );
+    } else {
+      // 使用模拟生成（开发环境）
+      generatedCopywritings = generateMockCopywritings(
+        product, 
+        styleConfig, 
+        platformConfig, 
+        variantCount
+      );
+    }
     
     // 保存生成的文案
     const copywriting = {
@@ -142,7 +163,8 @@ app.post('/api/generate', async (req, res) => {
       platform,
       content: generatedCopywritings,
       createdAt: new Date().toISOString(),
-      rating: null
+      rating: null,
+      aiGenerated: !!aiGenerator
     };
     
     copywritings.push(copywriting);
