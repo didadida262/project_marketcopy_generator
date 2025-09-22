@@ -546,7 +546,7 @@ const App: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.1 }}
-                className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white hover:shadow-lg transition-all duration-300"
+                className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative p-6">
@@ -569,7 +569,6 @@ const App: React.FC = () => {
                       {[1,2,3,4,5].map(star => (
                         <motion.button
                           key={star}
-                          whileHover={{ scale: 1.2 }}
                           whileTap={{ scale: 0.9 }}
                           className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
                             latestCopywriting.rating && star <= latestCopywriting.rating
@@ -610,12 +609,14 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* 背景装饰 */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
+      {/* 背景装饰 - Aceternity 风格 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" />
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" />
+        {/* 网格背景 */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
       </div>
 
       <div className="relative z-10">
@@ -626,20 +627,20 @@ const App: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center py-16 px-4"
         >
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          className="mx-auto mb-6 w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center floating-animation motion-div"
-          style={{ willChange: 'transform' }}
-        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+            className="mx-auto mb-6 w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center floating-animation motion-div neon-glow"
+            style={{ willChange: 'transform' }}
+          >
             <Sparkles className="w-10 h-10 text-white" />
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4"
+            className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-green-400 via-emerald-500 to-cyan-400 bg-clip-text text-transparent mb-4"
           >
             AI营销文案生成器
           </motion.h1>
@@ -647,7 +648,7 @@ const App: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-xl text-gray-300 max-w-2xl mx-auto"
           >
             快速生成专业的营销文案，提升您的销售效果
           </motion.p>
@@ -660,7 +661,7 @@ const App: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-4xl mx-auto px-4 mb-8"
           >
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <div className="bg-red-900/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg flex items-center gap-2 backdrop-blur-sm">
               <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs">!</span>
               </div>
@@ -705,15 +706,15 @@ const App: React.FC = () => {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-white rounded-2xl p-8 text-center shadow-2xl"
+              className="bg-gray-900/90 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 text-center shadow-2xl"
             >
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"
+                className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full mx-auto mb-4"
               />
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">AI正在生成文案</h3>
-              <p className="text-gray-600">请稍候，这可能需要几秒钟...</p>
+              <h3 className="text-lg font-semibold text-white mb-2">AI正在生成文案</h3>
+              <p className="text-gray-300">请稍候，这可能需要几秒钟...</p>
             </motion.div>
           </motion.div>
         )}

@@ -29,12 +29,12 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
                 className={cn(
                   'flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-300',
                   isCompleted && 'bg-green-500 border-green-500 text-white',
-                  isCurrent && 'bg-blue-500 border-blue-500 text-white shadow-lg',
-                  isUpcoming && 'bg-gray-100 border-gray-300 text-gray-500'
+                  isCurrent && 'bg-green-500 border-green-500 text-white shadow-lg neon-glow',
+                  isUpcoming && 'bg-gray-800 border-gray-600 text-gray-400'
                 )}
                 animate={{
                   scale: isCurrent ? 1.1 : 1,
-                  boxShadow: isCurrent ? '0 0 20px rgba(59, 130, 246, 0.5)' : '0 0 0px rgba(59, 130, 246, 0)',
+                  boxShadow: isCurrent ? '0 0 20px rgba(34, 197, 94, 0.5)' : '0 0 0px rgba(34, 197, 94, 0)',
                 }}
                 transition={{ duration: 0.3 }}
               >
@@ -47,12 +47,12 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
               <motion.span
                 className={cn(
                   'mt-2 text-sm font-medium transition-colors duration-300',
-                  isCurrent && 'text-blue-600',
-                  isCompleted && 'text-green-600',
-                  isUpcoming && 'text-gray-500'
+                  isCurrent && 'text-green-400',
+                  isCompleted && 'text-green-400',
+                  isUpcoming && 'text-gray-400'
                 )}
                 animate={{
-                  color: isCurrent ? '#2563eb' : isCompleted ? '#16a34a' : '#6b7280',
+                  color: isCurrent ? '#4ade80' : isCompleted ? '#4ade80' : '#9ca3af',
                 }}
               >
                 {step}
@@ -62,7 +62,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
               <motion.div
                 className={cn(
                   'h-0.5 w-16 transition-colors duration-300',
-                  stepNumber < currentStep ? 'bg-green-500' : 'bg-gray-300'
+                  stepNumber < currentStep ? 'bg-green-500' : 'bg-gray-600'
                 )}
                 initial={{ scaleX: 0 }}
                 animate={{ 

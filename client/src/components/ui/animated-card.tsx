@@ -35,7 +35,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
         ease: "easeOut",
       }}
       whileHover={{ 
-        scale: 1.02,
+        // 移除放大效果，只保留阴影变化
         transition: { duration: 0.2 }
       }}
       className={cn(

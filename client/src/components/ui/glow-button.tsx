@@ -24,23 +24,23 @@ export const GlowButton: React.FC<GlowButtonProps> = ({
   };
 
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-blue-500 to-purple-600 text-white',
-    secondary: 'bg-gradient-to-r from-gray-500 to-gray-600 text-white',
-    gradient: 'bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-white',
+    primary: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white',
+    secondary: 'bg-gradient-to-r from-gray-700 to-gray-800 text-white border border-gray-600',
+    gradient: 'bg-gradient-to-r from-cyan-400 via-green-500 to-emerald-600 text-white',
   };
 
   return (
     <motion.button
       className={cn(
         'relative overflow-hidden rounded-lg font-medium transition-all duration-300',
-        'hover:scale-105 active:scale-95',
+        'active:scale-95',
         sizeClasses[size],
         variantClasses[variant],
         glow && 'shadow-lg hover:shadow-2xl',
         className
       )}
       whileHover={{ 
-        boxShadow: glow ? '0 0 30px rgba(59, 130, 246, 0.6)' : undefined,
+        boxShadow: glow ? '0 0 30px rgba(34, 197, 94, 0.6)' : undefined,
       }}
       whileTap={{ scale: 0.95 }}
       {...(props as MotionProps)}
