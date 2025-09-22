@@ -17,10 +17,11 @@ git push origin main
 4. 选择您的 Git 仓库
 
 ### 3. 配置项目
-- **Framework Preset**: Other
-- **Root Directory**: 保持默认
-- **Build Command**: `npm run vercel-build`
+- **Framework Preset**: `Other`
+- **Root Directory**: `./` (根目录)
+- **Build Command**: `npm run build`
 - **Output Directory**: `client/build`
+- **Node.js Version**: `18.x`
 
 ### 4. 设置环境变量
 在项目设置中添加：

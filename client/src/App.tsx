@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Wand2, Star, Zap, Target, Users, Palette, Globe } from 'lucide-react';
 
 // UI Components
-import { Button } from './components/ui/button';
+// import { Button } from './components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Input } from './components/ui/input';
 import { Textarea } from './components/ui/textarea';

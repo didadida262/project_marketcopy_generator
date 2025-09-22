@@ -295,3 +295,6 @@ if (process.env.VERCEL) {
     console.log(`服务器运行在端口 ${PORT}`);
   });
 }
+
+// 导出app供Vercel使用
+module.exports = app;
