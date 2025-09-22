@@ -286,6 +286,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`服务器运行在端口 ${PORT}`);
-});
+// Vercel 无服务器环境
+if (process.env.VERCEL) {
+  module.exports = app;
+} else {
+  // 本地开发环境
+  app.listen(PORT, () => {
+    console.log(`服务器运行在端口 ${PORT}`);
+  });
+}

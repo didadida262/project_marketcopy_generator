@@ -1,0 +1,23 @@
+@echo off
+echo 开始部署到 Vercel...
+
+echo 1. 检查 Vercel CLI...
+vercel --version
+
+echo 2. 登录 Vercel...
+echo 请在浏览器中完成登录...
+vercel login
+
+echo 3. 部署项目...
+vercel
+
+echo 4. 配置环境变量...
+echo 请在 Vercel 控制台中设置以下环境变量:
+echo - OPENAI_API_KEY: 您的 OpenAI API 密钥
+echo - NODE_ENV: production
+
+echo 5. 生产环境部署...
+vercel --prod
+
+echo 部署完成！
+pause
