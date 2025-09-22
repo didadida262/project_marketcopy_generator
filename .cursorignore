@@ -1,0 +1,39 @@
+# Cursor IDE ignore file
+
+# Dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+client/build/
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Coverage
+coverage/
+.nyc_output/
