@@ -10,20 +10,32 @@
     "server": "nodemon server.js",
     "build": "cd client && npm install && npm run build",
     "vercel-build": "cd client && npm install && npm run build",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm run build",
+    "test": "node test-llama-simple.js",
+    "test:llama": "node test-llama.js",
+    "test:all": "test-all.bat",
+    "start:smart": "start-smart.bat",
+    "deploy:local": "deploy-local.bat",
+    "install:ollama": "install-ollama.bat"
   },
   "dependencies": {
-    "express": "^4.18.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "openai": "^4.20.1",
+    "express": "^4.18.2",
     "multer": "^1.4.5-lts.1",
+    "ollama": "^0.5.18",
+    "openai": "^4.20.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "keywords": ["ai", "marketing", "copywriting", "generator"],
+  "keywords": [
+    "ai",
+    "marketing",
+    "copywriting",
+    "generator"
+  ],
   "author": "Your Name",
   "license": "MIT"
 }

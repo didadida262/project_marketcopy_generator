@@ -5,25 +5,38 @@ require('dotenv').config();
 
 // 导入AI生成系统
 const { AICopywritingGenerator } = require('./ai-model-integration');
+const HandcraftJewelryAI = require('./llama-agent');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // 初始化AI生成器（支持模拟模式）
 let aiGenerator = null;
+let llamaAgent = null;
 let useMockMode = false;
+let useLlamaMode = false;
 
-if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key_here') {
-  try {
-    aiGenerator = new AICopywritingGenerator(process.env.OPENAI_API_KEY);
-    console.log('✅ AI生成器初始化成功 - 使用OpenAI API');
-  } catch (error) {
-    console.log('⚠️  AI生成器初始化失败，切换到模拟模式:', error.message);
+// 优先尝试Llama Agent
+try {
+  llamaAgent = new HandcraftJewelryAI();
+  useLlamaMode = true;
+  console.log('✅ Llama Agent初始化成功 - 使用本地Llama模型');
+} catch (error) {
+  console.log('⚠️  Llama Agent初始化失败:', error.message);
+  
+  // 如果Llama失败，尝试OpenAI
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key_here') {
+    try {
+      aiGenerator = new AICopywritingGenerator(process.env.OPENAI_API_KEY);
+      console.log('✅ AI生成器初始化成功 - 使用OpenAI API');
+    } catch (error) {
+      console.log('⚠️  AI生成器初始化失败，切换到模拟模式:', error.message);
+      useMockMode = true;
+    }
+  } else {
+    console.log('⚠️  OpenAI API密钥未配置，使用模拟模式');
     useMockMode = true;
   }
-} else {
-  console.log('⚠️  OpenAI API密钥未配置，使用模拟模式');
-  useMockMode = true;
 }
 
 // 中间件
@@ -149,13 +162,28 @@ app.post('/api/generate', async (req, res) => {
     // 使用AI大模型生成文案
     let generatedCopywritings;
     
-    if (useMockMode) {
+    if (useLlamaMode) {
+      // 使用Llama Agent生成
+      console.log('使用Llama Agent生成文案');
+      try {
+        const llamaResults = await llamaAgent.generateProductDescription(product);
+        generatedCopywritings = llamaResults.map(result => ({
+          angle: result.style || 'llama_generated',
+          content: result.content,
+          wordCount: result.content.length,
+          confidence: result.confidence || 0.8
+        }));
+      } catch (llamaError) {
+        console.error('Llama生成失败，切换到模拟模式:', llamaError);
+        generatedCopywritings = generateMockCopywritings(product, styleConfig, platformConfig, variantCount);
+      }
+    } else if (useMockMode) {
       // 使用模拟生成
       console.log('使用模拟模式生成文案');
       generatedCopywritings = generateMockCopywritings(product, styleConfig, platformConfig, variantCount);
     } else {
       try {
-        // 使用真实AI模型
+        // 使用OpenAI API
         generatedCopywritings = await aiGenerator.generateCopywriting(
           product, 
           style, 
@@ -198,7 +226,8 @@ app.post('/api/generate', async (req, res) => {
       content: generatedCopywritings,
       createdAt: new Date().toISOString(),
       rating: null,
-      aiGenerated: !useMockMode
+      aiGenerated: useLlamaMode || !useMockMode,
+      aiModel: useLlamaMode ? 'llama3.1:8b' : (useMockMode ? 'mock' : 'openai')
     };
     
     copywritings.push(copywriting);
@@ -235,6 +264,53 @@ app.get('/api/products', (req, res) => {
 // 获取文案历史
 app.get('/api/copywritings', (req, res) => {
   res.json(copywritings);
+});
+
+// 获取Llama Agent状态
+app.get('/api/llama/status', (req, res) => {
+  res.json({
+    available: useLlamaMode,
+    model: useLlamaMode ? 'llama3.1:8b' : null,
+    fallback: useMockMode
+  });
+});
+
+// 获取行业洞察
+app.get('/api/llama/insights', async (req, res) => {
+  if (!useLlamaMode) {
+    return res.status(503).json({ error: 'Llama Agent不可用' });
+  }
+  
+  try {
+    const insights = await llamaAgent.getIndustryInsights();
+    res.json({ insights });
+  } catch (error) {
+    console.error('获取行业洞察失败:', error);
+    res.status(500).json({ error: '获取行业洞察失败' });
+  }
+});
+
+// 学习新案例
+app.post('/api/llama/learn', async (req, res) => {
+  if (!useLlamaMode) {
+    return res.status(503).json({ error: 'Llama Agent不可用' });
+  }
+  
+  const { product, description, copywriting, performance } = req.body;
+  
+  try {
+    const success = await llamaAgent.learnFromCase({
+      product,
+      description,
+      copywriting,
+      performance
+    });
+    
+    res.json({ success, message: '案例学习完成' });
+  } catch (error) {
+    console.error('学习案例失败:', error);
+    res.status(500).json({ error: '学习案例失败' });
+  }
 });
 
 // 模拟AI生成文案的函数

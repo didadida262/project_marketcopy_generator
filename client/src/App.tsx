@@ -5,7 +5,7 @@ import { Sparkles, Wand2, Star, Zap, Target, Users, Palette, Globe } from 'lucid
 
 // UI Components
 // import { Button } from './components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
+import { CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Input } from './components/ui/input';
 import { Textarea } from './components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/safe-select';
@@ -244,7 +244,7 @@ const App: React.FC = () => {
         <form onSubmit={handleProductSubmit} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-4 h-4 flex-shrink-0" />
               产品名称 *
             </label>
             <Input
@@ -258,7 +258,7 @@ const App: React.FC = () => {
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Wand2 className="w-4 h-4" />
+              <Wand2 className="w-4 h-4 flex-shrink-0" />
               产品描述 *
             </label>
             <Textarea
@@ -272,7 +272,7 @@ const App: React.FC = () => {
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Zap className="w-4 h-4" />
+              <Zap className="w-4 h-4 flex-shrink-0" />
               产品特点
             </label>
             <Input
@@ -286,7 +286,7 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Palette className="w-4 h-4" />
+                <Palette className="w-4 h-4 flex-shrink-0" />
                 产品分类
               </label>
               <Select
@@ -310,7 +310,7 @@ const App: React.FC = () => {
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 flex-shrink-0" />
                 目标受众
               </label>
               <Input
@@ -324,7 +324,7 @@ const App: React.FC = () => {
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Star className="w-4 h-4" />
+              <Star className="w-4 h-4 flex-shrink-0" />
               价格区间
             </label>
             <Input
@@ -351,10 +351,10 @@ const App: React.FC = () => {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"
+                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                 />
               ) : (
-                <Wand2 className="w-5 h-5 mr-2" />
+                <Wand2 className="w-5 h-5" />
               )}
               {loading ? '保存中...' : '保存产品信息'}
             </GlowButton>
@@ -386,7 +386,7 @@ const App: React.FC = () => {
         <form onSubmit={handleGenerate} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Target className="w-4 h-4" />
+              <Target className="w-4 h-4 flex-shrink-0" />
               选择产品
             </label>
             <Select
@@ -410,7 +410,7 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Palette className="w-4 h-4" />
+                <Palette className="w-4 h-4 flex-shrink-0" />
                 文案风格
               </label>
               <Select
@@ -442,7 +442,7 @@ const App: React.FC = () => {
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Globe className="w-4 h-4" />
+                <Globe className="w-4 h-4 flex-shrink-0" />
                 目标平台
               </label>
               <Select
@@ -475,7 +475,7 @@ const App: React.FC = () => {
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Zap className="w-4 h-4" />
+              <Zap className="w-4 h-4 flex-shrink-0" />
               生成变体数量
             </label>
             <Select
@@ -512,10 +512,10 @@ const App: React.FC = () => {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"
+                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                 />
               ) : (
-                <Sparkles className="w-5 h-5 mr-2" />
+                <Sparkles className="w-5 h-5" />
               )}
               {loading ? '生成中...' : '生成文案'}
             </GlowButton>
@@ -557,12 +557,12 @@ const App: React.FC = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
-                <Palette className="w-5 h-5 text-green-400" />
+                <Palette className="w-5 h-5 text-green-400 flex-shrink-0" />
                 <span className="font-medium text-gray-300">风格:</span>
                 <span className="text-green-400 font-semibold">{styles[latestCopywriting.style]?.name}</span>
               </div>
               <div className="flex items-center gap-3">
-                <Globe className="w-5 h-5 text-emerald-400" />
+                <Globe className="w-5 h-5 text-emerald-400 flex-shrink-0" />
                 <span className="font-medium text-gray-300">平台:</span>
                 <span className="text-emerald-400 font-semibold">{platforms[latestCopywriting.platform]?.name}</span>
               </div>
@@ -582,7 +582,7 @@ const App: React.FC = () => {
                 <div className="relative p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold text-white flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-green-400" />
+                      <Zap className="w-5 h-5 text-green-400 flex-shrink-0" />
                       {variant.angle}
                     </h4>
                     <span className="px-3 py-1 bg-green-900/30 text-green-400 border border-green-500/30 rounded-full text-sm font-medium">
@@ -629,7 +629,7 @@ const App: React.FC = () => {
               size="lg"
               className="px-8"
             >
-              <Wand2 className="w-5 h-5 mr-2" />
+              <Wand2 className="w-5 h-5" />
               生成新文案
             </GlowButton>
           </motion.div>
